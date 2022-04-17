@@ -1,11 +1,11 @@
 import uvicorn
 import os
 import pandas as pd
-from fastapi import FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI,Body
 from google.cloud import storage
-class Message(BaseModel):
-    body: str
+import base64
+import json
+from datetime import datetime as dt
 
 
 PROJECT_ID="jtoro-test"
@@ -28,8 +28,9 @@ def root():
     return {"message": "Hello World"}
 
 @app.post("/",status_code=200)
-def trigger_process(message:Message):
-    if message.body==FILE_TO_DOWNLOAD:
+def trigger_process(request:dict=Body(...)):
+    print(request["message"])
+    if json.loads(base64.b64decode(request["message"]["data"]))["body"]==FILE_TO_DOWNLOAD:
         if CACHE_FOLDER in os.listdir():
             for file in os.scandir(CACHE_FOLDER):
                 os.remove(file.path)
