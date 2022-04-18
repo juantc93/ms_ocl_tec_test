@@ -13,15 +13,12 @@ INPUT_BUCKET="jtoro-test-input-bucket"
 OUTPUT_BUCKET="jtoro-test-output-bucket"
 #FILE_TO_DOWNLOAD="test_cloud_function.txt.txt"
 FILE_TO_DOWNLOAD="GlobalLandTemperaturesByCity.csv"
-LOCAL_TEST_PATH="D:\Juan\Documents\Documentos personales"
+#LOCAL_TEST_PATH="D:\Juan\Documents\Documentos personales"
 CACHE_FOLDER="cache"
 CHUNK_SIZE = 262144*10 
 
 app = FastAPI()
 
-def process_df(filename):
-    df=pd.read_csv(os.path.join(LOCAL_TEST_PATH,"GlobalLandTemperaturesByCity.csv"))
-    print (df.head())
 
 @app.get("/")
 def root():
@@ -29,8 +26,7 @@ def root():
 
 @app.post("/",status_code=200)
 def trigger_process(request:dict=Body(...)):
-    print(request["message"])
-    if json.loads(base64.b64decode(request["message"]["data"]))["body"]==FILE_TO_DOWNLOAD:
+    if base64.b64decode(request["message"]["data"])==bytes(FILE_TO_DOWNLOAD,'utf-8'):
         if CACHE_FOLDER in os.listdir():
             for file in os.scandir(CACHE_FOLDER):
                 os.remove(file.path)
