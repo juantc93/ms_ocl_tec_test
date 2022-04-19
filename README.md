@@ -30,6 +30,8 @@ cuando se pregunte, seleccionar no permitir peticiones no auténticadas  (N)
 
 - Usar la cloud function para activar un trabajo de Dataproc. Una desventaja sería que el tiempo que se demora en aprovisionar la workstation para el trabajo (aproxi 15 mins). Puede ser una alternativa en caso de tener que procesar archivos más grandes que puedan desbordar la capacidad de cloud run. 
 
+- Usar la cloud function para actviar un pipeline de Dataflow.
+
 
 ### A nivel de implementacion del ms.
 
