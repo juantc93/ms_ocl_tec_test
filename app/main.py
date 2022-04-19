@@ -23,9 +23,11 @@ app = FastAPI()
 @app.get("/")
 def root():
     return {"message": "Hello World"}
-
+    
+#Se define el endpoint para el tipo de peticion POST
 @app.post("/",status_code=200)
 def trigger_process(request:dict=Body(...)):
+    #Valida que el nombre del archivo sea el esperado
     if base64.b64decode(request["message"]["data"])==bytes(FILE_TO_DOWNLOAD,'utf-8'):
         if CACHE_FOLDER in os.listdir():
             for file in os.scandir(CACHE_FOLDER):
@@ -37,14 +39,15 @@ def trigger_process(request:dict=Body(...)):
         input_bucket = storage_client.get_bucket(INPUT_BUCKET)
         input_blob = input_bucket.blob(FILE_TO_DOWNLOAD)
         input_blob.download_to_filename(os.path.join(CACHE_FOLDER,FILE_TO_DOWNLOAD))
-        output_bucket=storage_client.get_bucket(OUTPUT_BUCKET)
-        
+              
         df=pd.read_csv(os.path.join(CACHE_FOLDER,FILE_TO_DOWNLOAD))
         df["Longitude"]=pd.util.hash_pandas_object(df["Longitude"])
         df["Latitude"]=pd.util.hash_pandas_object(df["Latitude"])
         for country in df["Country"].unique():
             filename="{}.csv".format(country)
             df[df["Country"]==country].to_csv(os.path.join(CACHE_FOLDER,filename),encoding='utf-8')
+
+        #Ciclos separadaos para que la demora en subida de archivos no interfiera en el procesamiento. Decision tomada en pruebas locales, impacto no medido en GCP    
         for country in df["Country"].unique():
             storage_client = storage.Client(PROJECT_ID)
             output_bucket=storage_client.get_bucket(OUTPUT_BUCKET)

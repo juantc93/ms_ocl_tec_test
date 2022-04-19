@@ -16,6 +16,7 @@ gcloud run deploy --memory 4G --concurrency 1 --timeout 1200 --max-instances 1
 - Limitar la concurrencia del microservicio a 1. Para evitar multiples reprocesamientos en caso de que pub/sub envíe varias veces la misma petición. 
 - Fijar el timeout de pub/sub en el maximo: 600s. Esto para que no envíe multiples reintentos durante el procesamiento
 - Fijar el timeout de Cloud Run en 1200s. Esto con el fin de no enviar respuestas de fallo en caso de que el proecesamiento del archivo tomara mucho tiempo. 
+- La separación de archivos y la subida al bucket de salida se realiza en dos ciclos separados, esto con el fin de que las operaciones de subida no demoraran o entorpecieran la escritura de los archivos cuando se testeaba el ms a nivel local. Es posible que el impacto no sea perceptible en el endpoint en GCP (Cloudrun + GCP)
 
 
 ## Oportunidades de mejora de la solución:
