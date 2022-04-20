@@ -15,6 +15,7 @@ cuando se pregunte, seleccionar no permitir peticiones no auténticadas  (N)
 
 ## Decisiones tomadas.
 - Cloud function activada por cloud storage mediante evento *Finalizar/crear* desde el bucket jtoro-test-input-bucket.
+- Crear una cuenta de servicio con permisos de Invocador de cloud run para asociar a la subscripción tipo push del topico en el cual escribe la cloud function. Esto con el fin de que el endpoint en cloud run no acepte peticiones no autenticadas.
 - Subir archivos a cloud storage por chunks: La prueba local de la api fallaba con archivos de más aprox 20MB, es por esto que se decide subir los archivos utilizando chunks (atributo de la clase blob).
 - Limitar la concurrencia del microservicio a 1. Para evitar multiples reprocesamientos en caso de que pub/sub envíe varias veces la misma petición. 
 - Fijar el timeout de pub/sub en el maximo: 600s. Esto para que no envíe multiples reintentos durante el procesamiento
