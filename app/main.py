@@ -51,7 +51,7 @@ def trigger_process(request:dict=Body(...)):
         for country in df["Country"].unique():
             storage_client = storage.Client(PROJECT_ID)
             output_bucket=storage_client.get_bucket(OUTPUT_BUCKET)
-            output_blob=output_bucket.blob(country,chunk_size=CHUNK_SIZE)
+            output_blob=output_bucket.blob("{}.csv".format(country),chunk_size=CHUNK_SIZE)
             output_blob.upload_from_filename(os.path.join(CACHE_FOLDER,"{}.csv".format(country)))
 
         return {"message":"fine_tho"}
