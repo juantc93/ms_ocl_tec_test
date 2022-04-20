@@ -10,8 +10,6 @@ cuando se pregunte, seleccionar no permitir peticiones no auténticadas  (N)
 
 ## Patrones de diseño identificados.
 
-En terminos generales dada la complejidad del microservicio no se escribió el codigo con OOP en mente.
-
 - Publisher-Subscriber (similar observador):Cloud Functions-> Pub/sub -> Cloud Run. Cloud funtions y Cloud run no se enteran de su existencia mutua (desacople). 
 - Decorador: FastApi. un decorador permite además de manejar la petición POST, el enpoint ejectue la lógica de negocio del problema contenida en la función *trigger_process* 
 
